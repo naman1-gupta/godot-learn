@@ -1,0 +1,37 @@
+[gd_scene load_steps=5 format=3 uid="uid://ce2lh56jasfl2"]
+
+[ext_resource type="Script" path="res://scripts/LargeBoulder.gd" id="1_fghpq"]
+[ext_resource type="Texture2D" uid="uid://cxgug4aysugf" path="res://assets/pngs/meteor_detailedLarge.png" id="2_hq1xc"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_x7jc7"]
+radius = 48.2597
+
+[sub_resource type="LabelSettings" id="LabelSettings_m74ew"]
+font_size = 30
+font_color = Color(1, 0.247059, 0.0941176, 1)
+outline_size = 11
+outline_color = Color(0, 0, 0, 1)
+
+[node name="LargeBoulder" type="RigidBody2D" groups=["enemy"]]
+max_contacts_reported = 2
+contact_monitor = true
+linear_damp_mode = 1
+script = ExtResource("1_fghpq")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_hq1xc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+shape = SubResource("CircleShape2D_x7jc7")
+
+[node name="Health" type="Label" parent="."]
+offset_left = -38.0
+offset_top = -21.0
+offset_right = 38.0
+offset_bottom = 24.0
+text = "100"
+label_settings = SubResource("LabelSettings_m74ew")
+horizontal_alignment = 1
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

@@ -1,0 +1,58 @@
+[gd_scene load_steps=7 format=3 uid="uid://duiiwq8ukdwfo"]
+
+[ext_resource type="PackedScene" uid="uid://d1tlo88fvnou0" path="res://assets/prefabs/player.tscn" id="1_5b820"]
+[ext_resource type="Script" path="res://scenes/root.gd" id="1_lapei"]
+[ext_resource type="Script" path="res://scripts/Timer.gd" id="3_i3v1j"]
+[ext_resource type="PackedScene" uid="uid://duekxy4non1xp" path="res://scenes/hud.tscn" id="4_4f0j8"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_bmv2y"]
+friction = 0.0
+bounce = 0.97
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_enjf0"]
+size = Vector2(1089, 802.5)
+
+[node name="Main" type="Node"]
+script = ExtResource("1_lapei")
+
+[node name="HUD" parent="." instance=ExtResource("4_4f0j8")]
+
+[node name="Player" parent="." node_paths=PackedStringArray("fire_delay_timer") instance=ExtResource("1_5b820")]
+z_index = 1
+position = Vector2(546, 1060)
+priority = 1
+fire_delay_timer = NodePath("../FireDelayTimer")
+fire_rate_per_minute = 1429
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1080.0
+offset_bottom = 1920.0
+color = Color(0.0862745, 0, 0.364706, 1)
+metadata/_edit_lock_ = true
+
+[node name="StaticBody2D" type="StaticBody2D" parent="ColorRect"]
+physics_material_override = SubResource("PhysicsMaterial_bmv2y")
+metadata/_edit_group_ = true
+
+[node name="ColorRect" type="ColorRect" parent="ColorRect/StaticBody2D"]
+offset_top = 1120.0
+offset_right = 1080.0
+offset_bottom = 1920.0
+color = Color(0.666667, 0.254902, 0.403922, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ColorRect/StaticBody2D"]
+position = Vector2(540, 1521.25)
+shape = SubResource("RectangleShape2D_enjf0")
+
+[node name="EnemySpawnTimer" type="Timer" parent="."]
+wait_time = 2.0
+script = ExtResource("3_i3v1j")
+
+[node name="FireDelayTimer" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[connection signal="start_game" from="HUD" to="." method="new_game"]
+[connection signal="body_entered" from="Player" to="Player" method="_on_body_entered"]
+[connection signal="game_over" from="Player" to="HUD" method="_on_player_game_over"]
+[connection signal="timeout" from="EnemySpawnTimer" to="EnemySpawnTimer" method="_on_timeout"]
